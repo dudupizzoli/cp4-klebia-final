@@ -1,5 +1,28 @@
 produtos = []
 
+def cadastrar_produto(id_produto, nome, preco, quantidade, categoria):
+    novo_produto = {
+        "id": id_produto,
+        "nome": nome,
+        "preco": preco,
+        "quantidade": quantidade,
+        "categoria": categoria
+                    }
+    produtos.append(novo_produto)
+    print("\nProduto cadastrado com sucesso!")
+
+def exibir_produto(produto):
+    print("ID: ", produto["id"])
+    print("Nome:", produto["nome"])
+    print("Preço: R$", produto["preco"])
+    print("Quantidade:", produto["quantidade"])
+    print("Categoria:", produto["categoria"])
+
+def remover_produto(produto):
+    produtos.remove(produto)
+    print("Produto removido.")
+
+
 opcao = 0
 while opcao != 6:
     print("\n========================================") 
@@ -17,6 +40,7 @@ while opcao != 6:
         opcao = int(input("Digite uma opção: "))
     except ValueError:
         print("Digite apenas números.")
+        continue
 
     match opcao:
         case 1:
@@ -25,15 +49,15 @@ while opcao != 6:
                 nome = input("Insira o nome do produto: ").strip()
                 if nome == "":
                     raise ValueError("O nome não pode ser vazio.")
-                preco = float(input("Insira o preço do produto: "))
 
-                id = int(input("Digite o ID do produto: "))
+                id_produto = int(input("Digite o ID do produto: "))
                 for produto in produtos:
-                    if id == produto["id"]:
+                    if id_produto == produto["id"]:
                         raise ValueError("O ID de um produto não pode se repetir.")
-                if id <= 0:
+                if id_produto <= 0:
                     raise ValueError("O ID precisa ser um número inteiro maior que 0.")
-                
+
+                preco = float(input("Insira o preço do produto: "))
                 if preco <= 0:
                     raise ValueError("O preço deve ser maior que 0.")
                 quantidade = int(input("Insira a quantidade disponível do produto: "))
@@ -42,16 +66,8 @@ while opcao != 6:
                 categoria = input("Insira a categoria do produto: ").strip()
                 if categoria == "":
                     raise ValueError("A categoria não pode ser vazia.")
-                novo_produto = {
-                    "id": id,
-                    "nome": nome,
-                    "preco": preco,
-                    "quantidade": quantidade,
-                    "categoria": categoria
-                }
- 
-                produtos.append(novo_produto)
-                print("\nProduto cadastrado com sucesso!")
+                cadastrar_produto(id_produto, nome, preco, quantidade, categoria)
+
             except ValueError as erro:
                 print("Erro:", erro)
 
@@ -61,13 +77,8 @@ while opcao != 6:
                 print("Não há produtos cadastrados.")
             else:
                 for produto in produtos:
-                    print("\nProdutos: ")
-                    print("ID: ", produto["id"])
-                    print("Nome:", produto["nome"])
-                    print("Preço:", produto["preco"])
-                    print("Quantidade:", produto["quantidade"])
-                    print("Categoria:", produto["categoria"])
-
+                    print("\n===================")
+                    exibir_produto(produto)
         case 3:
             try:
                 id_busca = int(input("Digite o ID do produto: "))
@@ -75,11 +86,7 @@ while opcao != 6:
                 for produto in produtos:
                     if id_busca == produto["id"]:
                         print("Produto encontrado!")
-                        print("ID: ", produto["id"])
-                        print("Nome:", produto["nome"])
-                        print("Preço:", produto["preco"])
-                        print("Quantidade:", produto["quantidade"])
-                        print("Categoria:", produto["categoria"])
+                        exibir_produto(produto)
                         encontrado = True
                         break
 
@@ -98,45 +105,65 @@ while opcao != 6:
                         encontrado = True 
                         opcao_alteracao = 0
                         while opcao_alteracao != 5:
-                            print("=== Menu de Alterações ===")
+                            print("\n============ Menu de Alterações ============")
                             print("1 - Nome.")
                             print("2 - Categoria.")
                             print("3 - Preço.")
                             print("4 - Quantidade em estoque.")
                             print("5 - Voltar.")
-                            opcao_alteracao = int(input("Digite o número do atributo que você deseja alterar: "))
+                            try:
+                                opcao_alteracao = int(input("Digite o número do atributo que você deseja alterar: "))
+                            except ValueError:
+                                print("Digite uma opção válida.")
+                                continue
                             match opcao_alteracao:
                                 case 1:
-                                    novo_nome = input("Digite o novo nome do produto: ")
-                                    if novo_nome == "":
-                                        print("O nome não pode ser vazio.")
-                                    else:
-                                        produto["nome"] = novo_nome
-                                        print("Nome alterado com sucesso!")
+                                    try: 
+                                        novo_nome = input("Digite o novo nome do produto: ").strip()
+                                        if novo_nome == "":
+                                            raise ValueError("O nome não pode ser vazio.")
+                                        else:
+                                            produto["nome"] = novo_nome
+                                            print("Nome alterado com sucesso!")
+
+                                    except ValueError as erro:
+                                        print("Erro:", erro)
 
                                 case 2:
-                                    nova_categoria = input("Digite a nova categoria do produto: ")
-                                    if nova_categoria == "":
-                                        print("A categoria não pode ser vazia.")
-                                    else:
-                                        produto["categoria"] = nova_categoria
-                                        print("Categoria alterada com sucesso!")
+                                    try:
+                                        nova_categoria = input("Digite a nova categoria do produto: ").strip()
+                                        if nova_categoria == "":
+                                            raise ValueError("A categoria não pode ser vazia.")
+                                        else:
+                                            produto["categoria"] = nova_categoria
+                                            print("Categoria alterada com sucesso!")
+
+                                    except ValueError as erro:
+                                        print("Erro:", erro)
 
                                 case 3:
-                                    novo_preco = float(input("Digite o novo preço do produto: "))
-                                    if novo_preco <= 0:
-                                        print("O preço não pode ser igual ou menor que 0.")
-                                    else:
-                                        produto["preco"] = novo_preco
-                                        print("Preço alterado com sucesso!")
+                                    try:
+                                        novo_preco = float(input("Digite o novo preço do produto: "))
+                                        if novo_preco <= 0:
+                                            raise ValueError("O preço não pode ser igual ou menor que 0.")
+                                        else:
+                                            produto["preco"] = novo_preco
+                                            print("Preço alterado com sucesso!")
+
+                                    except ValueError as erro:
+                                        print("Erro:", erro)
 
                                 case 4:
-                                    nova_quantidade = int(input("Digite a nova quantidade em estoque do produto: "))
-                                    if nova_quantidade < 0:
-                                        print("O estoque não pode ser menor que 0.")
-                                    else:
-                                        produto["quantidade"] = nova_quantidade
-                                        print("Estoque alterado com sucesso!")
+                                    try:
+                                        nova_quantidade = int(input("Digite a nova quantidade em estoque do produto: "))
+                                        if nova_quantidade < 0:
+                                            raise ValueError("O estoque não pode ser menor que 0.")
+                                        else:
+                                            produto["quantidade"] = nova_quantidade
+                                            print("Estoque alterado com sucesso!")
+
+                                    except ValueError as erro:
+                                        print("Erro:", erro)
 
                                 case 5:
                                     print("Voltando ao menu principal...")
@@ -149,10 +176,11 @@ while opcao != 6:
                     print("O produto não foi encontrado.")
 
             except ValueError:
-                print("Digite o ID do produto.")
+                print("Digite um ID válido.")
 
         case 5:
             try:
+                print("\n============ Exclusão ============")
                 id_excluir = int(input("Digite o ID do produto que você gostaria de tirar: "))
                 encontrado1 = False
  
@@ -168,8 +196,7 @@ while opcao != 6:
                         ).strip()
  
                         if decisao == "2":
-                            produtos.remove(produto)
-                            print("Produto removido.")
+                            remover_produto(produto)
                         elif decisao == "1":
                             print("Encerrando exclusão.")
                         else:
