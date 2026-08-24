@@ -1,4 +1,4 @@
-# Parte CP04 de python
+# Parte final CP04 de python
 
 Projeto desenvolvido para a disciplina de COMPUTATIONAL THINKING USING PYTHON
 
