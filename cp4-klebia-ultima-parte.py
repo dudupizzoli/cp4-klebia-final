@@ -1,0 +1,192 @@
+produtos = []
+
+opcao = 0
+while opcao != 6:
+    print("\n========================================") 
+    print("          CRUD DE PRODUTOS") 
+    print("========================================") 
+ 
+    print("1 - Cadastrar produto") 
+    print("2 - Listar produtos") 
+    print("3 - Buscar produto") 
+    print("4 - Atualizar produto") 
+    print("5 - Excluir produto") 
+    print("6 - Sair") 
+    print("========================================")
+    try:
+        opcao = int(input("Digite uma opção: "))
+    except ValueError:
+        print("Digite apenas números.")
+
+    match opcao:
+        case 1:
+            print("\n========== CADASTRO ==========") 
+            try:
+                nome = input("Insira o nome do produto: ").strip()
+                if nome == "":
+                    raise ValueError("O nome não pode ser vazio.")
+                preco = float(input("Insira o preço do produto: "))
+
+                id = int(input("Digite o ID do produto: "))
+                for produto in produtos:
+                    if id == produto["id"]:
+                        raise ValueError("O ID de um produto não pode se repetir.")
+                if id <= 0:
+                    raise ValueError("O ID precisa ser um número inteiro maior que 0.")
+                
+                if preco <= 0:
+                    raise ValueError("O preço deve ser maior que 0.")
+                quantidade = int(input("Insira a quantidade disponível do produto: "))
+                if quantidade < 0:
+                    raise ValueError("A quantidade não pode ser negativa.")
+                categoria = input("Insira a categoria do produto: ").strip()
+                if categoria == "":
+                    raise ValueError("A categoria não pode ser vazia.")
+                novo_produto = {
+                    "id": id,
+                    "nome": nome,
+                    "preco": preco,
+                    "quantidade": quantidade,
+                    "categoria": categoria
+                }
+ 
+                produtos.append(novo_produto)
+                print("\nProduto cadastrado com sucesso!")
+            except ValueError as erro:
+                print("Erro:", erro)
+
+        case 2:
+            print("\n========== PRODUTOS ==========")
+            if len(produtos) == 0:
+                print("Não há produtos cadastrados.")
+            else:
+                for produto in produtos:
+                    print("\nProdutos: ")
+                    print("ID: ", produto["id"])
+                    print("Nome:", produto["nome"])
+                    print("Preço:", produto["preco"])
+                    print("Quantidade:", produto["quantidade"])
+                    print("Categoria:", produto["categoria"])
+
+        case 3:
+            try:
+                id_busca = int(input("Digite o ID do produto: "))
+                encontrado = False
+                for produto in produtos:
+                    if id_busca == produto["id"]:
+                        print("Produto encontrado!")
+                        print("ID: ", produto["id"])
+                        print("Nome:", produto["nome"])
+                        print("Preço:", produto["preco"])
+                        print("Quantidade:", produto["quantidade"])
+                        print("Categoria:", produto["categoria"])
+                        encontrado = True
+                        break
+
+                if not encontrado:
+                    print("Produto não encontrado.")
+
+            except ValueError:
+                print("Digite o ID do produto.")
+
+        case 4:
+            try:
+                id_alteracao = int(input("Digite o ID do produto que será alterado: "))
+                encontrado = False
+                for produto in produtos:
+                    if id_alteracao == produto["id"]:
+                        encontrado = True 
+                        opcao_alteracao = 0
+                        while opcao_alteracao != 5:
+                            print("=== Menu de Alterações ===")
+                            print("1 - Nome.")
+                            print("2 - Categoria.")
+                            print("3 - Preço.")
+                            print("4 - Quantidade em estoque.")
+                            print("5 - Voltar.")
+                            opcao_alteracao = int(input("Digite o número do atributo que você deseja alterar: "))
+                            match opcao_alteracao:
+                                case 1:
+                                    novo_nome = input("Digite o novo nome do produto: ")
+                                    if novo_nome == "":
+                                        print("O nome não pode ser vazio.")
+                                    else:
+                                        produto["nome"] = novo_nome
+                                        print("Nome alterado com sucesso!")
+
+                                case 2:
+                                    nova_categoria = input("Digite a nova categoria do produto: ")
+                                    if nova_categoria == "":
+                                        print("A categoria não pode ser vazia.")
+                                    else:
+                                        produto["categoria"] = nova_categoria
+                                        print("Categoria alterada com sucesso!")
+
+                                case 3:
+                                    novo_preco = float(input("Digite o novo preço do produto: "))
+                                    if novo_preco <= 0:
+                                        print("O preço não pode ser igual ou menor que 0.")
+                                    else:
+                                        produto["preco"] = novo_preco
+                                        print("Preço alterado com sucesso!")
+
+                                case 4:
+                                    nova_quantidade = int(input("Digite a nova quantidade em estoque do produto: "))
+                                    if nova_quantidade < 0:
+                                        print("O estoque não pode ser menor que 0.")
+                                    else:
+                                        produto["quantidade"] = nova_quantidade
+                                        print("Estoque alterado com sucesso!")
+
+                                case 5:
+                                    print("Voltando ao menu principal...")
+                                    break
+
+                                case _:
+                                    print("Opção inválida. Digite uma opção válida do menu.") 
+
+                if not encontrado:
+                    print("O produto não foi encontrado.")
+
+            except ValueError:
+                print("Digite o ID do produto.")
+
+        case 5:
+            try:
+                id_excluir = int(input("Digite o ID do produto que você gostaria de tirar: "))
+                encontrado1 = False
+ 
+                for produto in produtos:
+                    if produto["id"] == id_excluir:
+                        encontrado1 = True
+ 
+                        decisao = input(
+                            "Deseja mesmo apagar esse produto?\n"
+                            "1: Não\n"
+                            "2: Sim\n"
+                            "Resposta: "
+                        ).strip()
+ 
+                        if decisao == "2":
+                            produtos.remove(produto)
+                            print("Produto removido.")
+                        elif decisao == "1":
+                            print("Encerrando exclusão.")
+                        else:
+                            print("Nenhuma das opções foi escolhida.")
+ 
+                        break
+ 
+                if encontrado1 == False:
+                    print("Produto não encontrado/Não existe.")
+ 
+            except ValueError:
+                print("Digite um valor válido.")
+
+
+        case 6:
+            print("Encerrando programa...")
+            break
+
+        case _:
+            print("Opção inválida. Digite uma opção válida do menu.")
